@@ -37,30 +37,30 @@ public class UIController : MonoBehaviour
     {
         AIList[0].color = Color.red;
         AIList[1].color = Color.white;
-        PlayerPick.AIPicked = 0;
+        GameData.AIPicked = 0;
     }
     public void OnClickDevil()
     {
         AIList[0].color = Color.white;
         AIList[1].color = Color.red;
-        PlayerPick.AIPicked = 1;
+        GameData.AIPicked = 1;
     }
     public void OnClickRestart()
     {
-        GameManager.manager.ResetGame(PlayerPick.IsPlayerFirst, PlayerPick.AIPicked);
+        GameManager.manager.ResetGame(GameData.IsPlayerFirst, GameData.AIPicked);
         TogglePicker(false);
     }
     public void OnClickFirst()
     {
         InitiativeList[0].color = Color.red;
         InitiativeList[1].color = Color.white;
-        PlayerPick.IsPlayerFirst = true;
+        GameData.IsPlayerFirst = true;
     }
     public void OnClickSecond()
     {
         InitiativeList[0].color = Color.white;
         InitiativeList[1].color = Color.red;
-        PlayerPick.IsPlayerFirst = false;
+        GameData.IsPlayerFirst = false;
     }
     public void OnClickQuit()
     {

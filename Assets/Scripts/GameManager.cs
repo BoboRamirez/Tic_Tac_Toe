@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     private int lastPlay = -1;
     public int LastPlay {  get { return lastPlay; } }
     private AITheDevil AI_TheDevil;
+    private Audio a;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,12 +33,13 @@ public class GameManager : MonoBehaviour
         AI_TheDevil.Initialize();
         ActivateAI += AI_TheFool;
         UnityEngine.Random.InitState((int)Time.time);
-        _isPlayerFirst = PlayerPick.IsPlayerFirst;
+        _isPlayerFirst = GameData.IsPlayerFirst;
         _isPlayerOn = _isPlayerFirst;
         if (!_isPlayerFirst)
         {
             ActivateAI();
         }
+        a = GameData.a;
     }
 
     // Update is called once per frame
@@ -52,8 +54,7 @@ public class GameManager : MonoBehaviour
 
     private void HandlePlayerOn()
     {
-        //UICtrl.ShowMessage("Your Turn...");
-        UICtrl.ShowMessage("Here?...");
+        UICtrl.ShowMessage("Your Turn...");
         ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out raycastHit))
         {
@@ -63,8 +64,7 @@ public class GameManager : MonoBehaviour
             mino = raycastHit.transform.gameObject.GetComponent<Mino>();
             if (mino.State == MinoState.Empty)
                 mino.SetState(MinoState.Ghost);
-
-            if (Input.GetMouseButtonUp(0))
+            if (mino.State == MinoState.Ghost && Input.GetMouseButtonUp(0))
             {
                 PlayAt(mino.Index);
                 if (!_isPlayerOn)
@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
     /// <param name="index">the position to play at</param>
     private void PlayAt(int index)
     {
+        a.Play();
         minos[index].
            SetState(_isPlayerFirst ^ _isPlayerOn ? MinoState.Second : MinoState.First);
         availableMinos.Remove(index);
@@ -176,13 +177,13 @@ public class GameManager : MonoBehaviour
             case EndGameState.PlayerWin: 
                 Debug.Log("Player win");
                 UICtrl.ShowMessage("You Win!\nAnother round?");
-                ActivateAI -= PlayerPick.AIPicked == 0 ? AI_TheFool : AI_TheDevil.AI_TheDevil;
+                ActivateAI -= GameData.AIPicked == 0 ? AI_TheFool : AI_TheDevil.AI_TheDevil;
                 UICtrl.TogglePicker(true);
                 _isPlayerOn = false;
                 break;
             case EndGameState.AIWin: 
                 Debug.Log("AI win");
-                UICtrl.ShowMessage($"{(PlayerPick.AIPicked == 0? "Fool" : "Devil")} Wins!\nAnother round?");
+                UICtrl.ShowMessage($"{(GameData.AIPicked == 0? "Fool" : "Devil")} Wins!\nAnother round?");
                 UICtrl.TogglePicker(true);
                 _isPlayerOn = false;
                 break;

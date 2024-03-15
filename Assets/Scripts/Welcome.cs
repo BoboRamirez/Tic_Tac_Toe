@@ -5,14 +5,19 @@ using UnityEngine.SceneManagement;
 
 public class Welcome : MonoBehaviour
 {
+    public Audio a;
     public void OnClickFirst()
     {
-        PlayerPick.IsPlayerFirst = true;
+        a.Play();
+        GameData.IsPlayerFirst = true;
+        GameData.a = a;
         SceneManager.LoadScene("Stage");
     }
     public void OnClickSecond()
     {
-        PlayerPick.IsPlayerFirst = false;
+        a.Play();
+        GameData.IsPlayerFirst = false;
+        GameData.a = a;
         SceneManager.LoadScene("Stage");
     }
     public void OnClickQuit()
@@ -21,8 +26,9 @@ public class Welcome : MonoBehaviour
     }
 }
 
-public static class PlayerPick
+public static class GameData
 {
     public static bool IsPlayerFirst;
     public static int AIPicked = 0;
+    public static Audio a;
 }
